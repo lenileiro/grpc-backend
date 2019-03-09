@@ -16,19 +16,11 @@ var packageDefinition = protoLoader.loadSync(
 var hello_proto = grpc.loadPackageDefinition(packageDefinition).helloworld;
 
 function main() {
-    let credentials = grpc.credentials.createSsl(
-        fs.readFileSync('./keys/ca.crt'),
-     fs.readFileSync('./keys/client.key'), 
-     fs.readFileSync('./keys/client.crt'));
-
     const cacert = fs.readFileSync('keys/ca.crt');
     const cert = fs.readFileSync('keys/client.crt');
     const key = fs.readFileSync('keys/client.key');
-    const kvpair = {
-        'private_key': key,
-        'cert_chain': cert
-    };
-    //const credentials = grpc.credentials.createSsl(key, cert, cacert);
+    
+    const credentials = grpc.credentials.createSsl(cacert, key, cert);
 
     var client = new hello_proto.Greeter('localhost:50051', credentials);
     var user;
